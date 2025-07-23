@@ -1,6 +1,7 @@
 //for handling requests of location information
 const {locationModel} = require("../models/locations")
 
+
 const getLocations = async(req,res,next) => {
     //perform db query and retrieve popular locations for users
     try{

@@ -1,18 +1,22 @@
-const mongoose = require("mongoose")
+//const mongoose = require("mongoose")
+
 
 /*async function ConnectDB(){
     try{
-        await mongoose.connect(process.env.mongoURL)
+        const connection = await mongoose.connect(process.env.MONGOURL)
         console.log('mongodb connected successfully')
+        return connection
     }catch(err){
         console.log(err)
         process.exit(1)
     }
 }*/
 
-const uri = `mongodb+srv://anxumalo000:${process.env.PASSWORD}@cluster0.mb1i07x.mongodb.net/travel?retryWrites=true&w=majority&appName=Cluster0`;
 
-const clientOptions = { serverApi: { version: '1', strict: true, deprecationErrors: true } };
+const mongoose = require('mongoose');
+const uri = `mongodb+srv://anxumalo000:${process.env.MONGO_PASSWORD}@cluster0.mb1i07x.mongodb.net/travel?retryWrites=true&w=majority&appName=Cluster0`;
+
+const clientOptions = { serverApi: { version: '1', strict: false, deprecationErrors: true } };
 
 async function ConnectDB() {
   try {
