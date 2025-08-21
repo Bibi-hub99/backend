@@ -7,6 +7,7 @@ const fs = require('fs')
 //takes a document as an argument and extract id field for unique identification
 
 //const privateKey = fs.readFileSync(path.join(__dirname,'..','private-key.pem'),"utf8")
+
 const privateKey = process.env.PRIVATE_KEY
 
 const createPayload = (user)=>{
