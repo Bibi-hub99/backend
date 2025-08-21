@@ -1,7 +1,7 @@
-//const mongoose = require("mongoose")
+/*const mongoose = require("mongoose")
 
 
-/*async function ConnectDB(){
+async function ConnectDB(){
     try{
         const connection = await mongoose.connect(process.env.MONGOURL)
         console.log('mongodb connected successfully')
@@ -15,6 +15,7 @@
 
 const mongoose = require('mongoose');
 const uri = `mongodb+srv://anxumalo000:${process.env.MONGO_PASSWORD}@cluster0.mb1i07x.mongodb.net/travel?retryWrites=true&w=majority&appName=Cluster0`;
+console.log(process.env.MONGO_PASSWORD)
 
 const clientOptions = { serverApi: { version: '1', strict: false, deprecationErrors: true } };
 

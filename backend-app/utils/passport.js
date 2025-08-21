@@ -9,8 +9,8 @@ const path = require("path")
 
 //public key for decrypting
 //const publicKey = fs.readFileSync(path.join(__dirname,"..","public-key.pem"),"utf8")
-const publicKey = process.env.PUBLIC_KEY
 
+const publicKey = process.env.PUBLIC_KEY
 //jwt options for verification
 const opts = {
 
