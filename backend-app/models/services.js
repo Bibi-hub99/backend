@@ -11,8 +11,14 @@ const serviceSchema = new mongoose.Schema({
     category:{type:String,required:true},
     price:{type:Number,required:true},
     location:{
-        country:String,
-        city:String
+        country:{
+            type:String,
+            set:(v)=>v.toUpperCase()
+        },
+        city:{
+            type:String,
+            set:(v)=>v.toUpperCase()
+        }
     },
     uniqueFeatures:{
 
@@ -25,11 +31,30 @@ serviceSchema.statics.findByCategory = async function findByCategory(queryObj,sk
     return services
 }
 
+//finds documents which match pass the queryFiltering
 serviceSchema.statics.searchServices = async function searchServices(queryObj){
-    const services = await this.find(queryObj)
+
+    const services = this.find(queryObj)/*aggregate([
+
+        {
+            $search: {
+            index: "default",
+            text: {
+                query: queryObj,
+                path: {
+                wildcard: "*"
+                }
+            }
+            }
+        }
+
+    ])*/
     return services
+
 }
 
+
+//finds one document, first one to match the filter
 serviceSchema.statics.findSingleService = async function findSingleService(id){
     const service = await this.findById(id)
     return service
@@ -41,7 +66,6 @@ serviceSchema.methods.findSimilar = async function findSimilar(){
     return services
 }
 
-serviceSchema.get()
 
 const serviceModel = mongoose.model("services",serviceSchema,"services")
 
