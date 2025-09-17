@@ -1,5 +1,4 @@
 //handles jwt verification and authentication of the user
-const moment = require("moment")
 
 const userModel = require("../models/users")
 const jwtStrategy = require("passport-jwt").Strategy
@@ -8,8 +7,8 @@ const fs = require("fs")
 const path = require("path")
 
 //public key for decrypting
-const publicKey = fs.readFileSync(path.join(__dirname,"..","public-key.pem"),"utf8")
-
+//const publicKey = fs.readFileSync(path.join(__dirname,"..","public-key.pem"),"utf8")
+const publicKey = process.env.PUBLIC_KEY
 
 //jwt options for verification
 const opts = {

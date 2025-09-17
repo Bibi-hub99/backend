@@ -2,11 +2,12 @@
 const jsonwebtoken = require("jsonwebtoken")
 
 const path = require("path")
-const fs = require('fs')
+//const fs = require('fs')
 //create a payload for the user login
 //takes a document as an argument and extract id field for unique identification
 
-const privateKey = fs.readFileSync(path.join(__dirname,'..','private-key.pem'),"utf8")
+//const privateKey = fs.readFileSync(path.join(__dirname,'..','private-key.pem'),"utf8")
+const privateKey = process.env.PRIVATE_KEY
 
 const createPayload = (user)=>{
 
