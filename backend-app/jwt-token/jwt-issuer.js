@@ -6,9 +6,7 @@ const fs = require('fs')
 //create a payload for the user login
 //takes a document as an argument and extract id field for unique identification
 
-//const privateKey = fs.readFileSync(path.join(__dirname,'..','private-key.pem'),"utf8")
-
-const privateKey = process.env.PRIVATE_KEY
+const privateKey = fs.readFileSync(path.join(__dirname,'..','private-key.pem'),"utf8")
 
 const createPayload = (user)=>{
 
@@ -22,7 +20,7 @@ const createPayload = (user)=>{
         accountType:accountType
     }
 
-    const token = jsonwebtoken.sign(payload,privateKey,{expiresIn:'1d',algorithm:"RS256"})
+    const token = jsonwebtoken.sign(payload,privateKey,{expiresIn:"1d",algorithm:"RS256"})
     return {
         token:`Bearer ${token}`,
         expIn:expireIn

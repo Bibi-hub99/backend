@@ -5,7 +5,7 @@ const isClient = (req,res,next) => {
     if(accountType === 'client'){
         next()
     }else{
-        res.status(403).json({success:false,message:'not authorized for action'})
+        res.status(401).json({success:false,message:'not authorized for action'})
     }
 }
 
@@ -14,7 +14,7 @@ const isServiceProvider = (req,res,next) => {
     if(accountType === 'service_provider'){
         next()
     }else{
-        res.status(403).json({success:false,message:'not authorized for action'})
+        res.status(401).json({success:false,message:'not authorized for action'})
     }
 }
 

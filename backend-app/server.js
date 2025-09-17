@@ -3,6 +3,7 @@ const cors = require('cors')
 const ConnectDB = require("./database/connect")
 const express = require("express")
 const passport = require("passport")
+const {confirmBooking} = require("./crud/bookings")
 
 
 const OfferRouter = require("./routes/offer")
@@ -12,10 +13,15 @@ const UserRouter = require("./routes/users")
 const ProtectedRouter = require("./routes/protected")
 
 const app = express()
-app.use(express.json())
-app.use(cors())
 
 ConnectDB()
+
+app.use(cors())
+
+app.post("/protected/confirm-booking",express.raw({type:"application/json"}),confirmBooking)
+
+app.use(express.json())
+
 
 require("./utils/passport")(passport)
 app.use(passport.initialize())

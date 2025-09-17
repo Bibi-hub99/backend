@@ -1,3 +1,4 @@
+const { query } = require("@splidejs/splide/src/js/utils")
 const serviceModel = require("../models/services")
 
 //middlewares for services request and database queries
@@ -22,7 +23,6 @@ const findByCategory = async(req,res,next) => {
         }
         queryObj.category = category
         const services = await serviceModel.findByCategory(queryObj,skip,limit)
-
         res.status(200).json({success:true,services:services})
 
     }catch(err){
@@ -31,11 +31,14 @@ const findByCategory = async(req,res,next) => {
 }
 
 const searchServices = async(req,res,next) => {
+
     try{
 
         const queryObj = {}
 
         const {searchTerm} = req.query
+
+        queryObj.$text = {$search:`\"${searchTerm}\"`}
 
         if(req.query.category){
             if(req.query.category !=="undefined" && req.query.category !== undefined){
@@ -43,27 +46,14 @@ const searchServices = async(req,res,next) => {
             }
         }
 
-        const querySearch = 
-    
-            {
-                $search: {
-                    index: "default",
-                    text: {
-                        query: searchTerm,
-                        path: {
-                            wildcard: "*"
-                        }
-                    }
-                }
-            }
-        
-        const services = await serviceModel.aggregate([querySearch])
+        const services = await serviceModel.searchServices(queryObj)
 
         res.status(200).json({success:true,services:services})
 
     }catch(err){
         next(err)
     }
+    
 }
 
 const findSingleService = async(req,res,next)=>{
@@ -83,8 +73,9 @@ const findSingleService = async(req,res,next)=>{
 }
 
 const queryServices = async(req,res,next) => {
+
     try{
-        console.log(req.query.sort)
+
         const queryObj = {}
         queryObj.$text = {$search: `\"${req.query.searchTerm}\"`}
         const filterArr = []
@@ -120,7 +111,7 @@ const queryServices = async(req,res,next) => {
             if(sort === "by_name"){
                 queryFinal = queryFinal.find({}).sort({title:1})
             }else if (sort === 'by_price_asc'){
-                queryFinal = queryFinal.find({}).sort({title:1})
+                queryFinal = queryFinal.find({}).sort({price:1})
             }else if (sort === 'by_price_des'){
                 queryFinal = queryFinal.find({}).sort({price:-1})
             }
@@ -134,6 +125,7 @@ const queryServices = async(req,res,next) => {
         console.log(err)
         next(err)
     }
+    
 }
 
 const addService = async (req,res,next) => {
@@ -178,14 +170,14 @@ const addService = async (req,res,next) => {
                 },
                 uniqueFeatures:{
                     tripFromAddress:{
-                        streetName:departSplits[2],
+                        streetName:departSplits[2].toUpperCase(),
                         postCode:departSplits[3],
                         time:departHours
                     },
                     tripToAddress:{
-                        country:arrivalSplits[0],
-                        city:arrivalSplits[1],
-                        streetName:arrivalSplits[2],
+                        country:arrivalSplits[0].toUpperCase(),
+                        city:arrivalSplits[1].toUpperCase(),
+                        streetName:arrivalSplits[2].toUpperCase(),
                         postCode:arrivalSplits[3],
                         time:arrivalHours
                     }
@@ -231,10 +223,9 @@ const updateService = async (req,res,next) => {
             const locationSplits = location.split(",")
             updateObj['location'] = {
                 country:locationSplits[0],
-                city:locationSplits[1],
-                streetName:locationSplits[2],
-                postCode:locationSplits[3]
+                city:locationSplits[1]
             }
+            
         }else if(category === "flights" || category === "buses"){
             const {departAddress,departTime,arrivalAddress,arrivalTime} = req.body
             const departSplits = departAddress.split(",")
@@ -253,14 +244,14 @@ const updateService = async (req,res,next) => {
                 },
                 uniqueFeatures:{
                     tripFromAddress:{
-                        streetName:departSplits[2],
-                        postCode:departSplits[3],
+                        streetName:departSplits[2].toUpperCase(),
+                        postCode:departSplits[3].toUpperCase(),
                         time:departHours
                     },
                     tripToAddress:{
-                        country:arrivalSplits[0],
-                        city:arrivalSplits[1],
-                        streetName:arrivalSplits[2],
+                        country:arrivalSplits[0].toUpperCase(),
+                        city:arrivalSplits[1].toUpperCase(),
+                        streetName:arrivalSplits[2].toUpperCase(),
                         postCode:arrivalSplits[3],
                         time:arrivalHours
                     }
@@ -291,23 +282,31 @@ const deleteService = async (req,res,next) => {
 }
 
 const searchTravelTickets = async (req,res,next) => {
+
     try{
         let {depart,arrival,category,time} = req.query
-        depart = `${depart}`.slice(0,1).toUpperCase() + `${depart}`.slice(1)
-        arrival = `${arrival}`.slice(0,1).toUpperCase() + `${arrival}`.slice(1)
+        depart = `${depart.toUpperCase()}`
+        arrival = `${arrival.toUpperCase()}`
+
+        console.log(category)
 
         const queryObj = {
             'location.city':depart,
             'uniqueFeatures.tripToAddress.city':arrival,
             category:category
         }
+
+        console.log(queryObj)
         
         const services = await serviceModel.find(queryObj)
         res.status(200).json({success:true,services:services})
     }catch(err){
         console.log(err)
     }
+    
 }
+
+
 
 module.exports = {
     findServices,

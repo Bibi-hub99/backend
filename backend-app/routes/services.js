@@ -2,7 +2,6 @@ const express = require("express")
 
 const {findServices,findByCategory,searchServices,findSingleService,queryServices,searchTravelTickets} = require("../crud/services")
 
-
 /*
 handles routes which begins with services by assigning middlewares to matching routes
  */
